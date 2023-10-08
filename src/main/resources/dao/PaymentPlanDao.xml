@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bo.ucb.edu.ingsoft.dao.PaymentPlanDao">
+    <select id="findByPaymentPlanId" resultType="bo.ucb.edu.ingsoft.dto.PaymentPlanRequest">
+        SELECT
+            payment_plan_id as paymentPlanId,
+            plan as plan,
+            description as description,
+            cost as cost,
+            duration as duration,
+            status as status
+
+        FROM payment_plan
+        WHERE
+            payment_plan_id = #{paymentPlanId} and status = 1
+    </select>
+
+    <resultMap id="paymentsResultMap" type="bo.ucb.edu.ingsoft.model.PaymentPlan">
+        <id column="paymentPlanId" property="paymentPlanId"></id>
+        <result column="plan" property="plan"></result>
+        <result column="description" property="description"></result>
+        <result column="cost" property="cost"></result>
+        <result column="duration" property="duration"></result>
+    </resultMap>
+    <select id="getPaymentPlans" resultMap="paymentsResultMap">
+        SELECT
+            payment_plan_id as paymentPlanId,
+            plan as plan,
+            description as description,
+            cost as cost,
+            duration as duration,
+            status as status
+        FROM payment_plan
+        WHERE
+            status = 1
+    </select>
+    <insert id="newPaymentPlan" parameterType="bo.ucb.edu.ingsoft.model.PaymentPlan">
+        INSERT INTO payment_plan VALUES (
+            null,
+            #{plan},
+            #{description},
+            #{cost},
+            #{duration},
+            #{status},
+            #{transaction.txId},
+            #{transaction.txHost},
+            #{transaction.txUserId},
+            #{transaction.txDate}
+        )
+    </insert>
+
+</mapper>

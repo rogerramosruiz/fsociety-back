@@ -1,0 +1,44 @@
+### POST new tag user
+POST http://localhost:8080/tags/user/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nameTags": "Javascript",
+  "verified": 1
+}
+### add taguser
+
+POST http://localhost:8080/tags/user/1/add
+Accept: application/json
+Content-Type: application/json
+
+{
+  "tagId": "1"
+}
+### add tag project
+POST http://localhost:8080/tags/projects/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nameTags": "Javascript",
+  "verified": 1
+}
+### delete project tag
+DELETE http://localhost:8080/tags/2/project/2
+
+### delete user tag
+DELETE http://localhost:8080/tags/2/user/2
+
+### GET tag by name
+GET http://localhost:8080/tags/python
+Accept: application/json
+
+###get user tag
+GET http://localhost:8080/tags/user/1
+Accept: application/json
+
+### GET All verified tags
+GET http://localhost:8080/tags
+Accept: application/json

@@ -1,0 +1,50 @@
+### POST new skill for a user
+POST http://localhost:8080/skills/userSkill/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "skillName": "Programacion java Backend",
+  "verified": 1
+}
+### PUT skill delete status
+PUT http://localhost:8080/skills/userSkill/21
+Accept: application/json
+Content-Type: application/json
+
+{
+}
+### update skill
+PUT http://localhost:8080/skills/userSkill/update/21
+Accept: application/json
+Content-Type: application/json
+
+{
+  "skillName": "Programacion en go"
+}
+
+### POST new skill for a project
+POST http://localhost:8080/skills/projectSkill/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "skillName": "c++",
+  "verified": 1
+}
+
+### GET skill by name
+
+GET http://localhost:8080/skills/python
+Accept: application/json
+
+### GET All verified skills
+GET http://localhost:8080/skills
+Accept: application/json
+
+### GET All user verified skills
+GET http://localhost:8080/skills/userskills/3
+Accept: application/json
+### GET All project verified skills
+GET http://localhost:8080/skills/projectkills/1
+Accept: application/json

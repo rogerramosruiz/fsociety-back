@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bo.ucb.edu.ingsoft.dao.TagDao">
+    <insert id="createTag" parameterType="bo.ucb.edu.ingsoft.model.Tag">
+        INSERT INTO tags
+        VALUES (
+            null,#{nameTags},#{verified},1,#{transaction.txId},#{transaction.txHost},
+            #{transaction.txUserId},#{transaction.txDate}
+        )
+    </insert>
+    <select id="getLastIdTag" resultType="java.lang.Integer">
+        SELECT tags_id FROM tags ORDER BY tags_id DESC LIMIT 1
+    </select>
+    <select id="getByTagName" resultType="bo.ucb.edu.ingsoft.model.Tag">
+        SELECT tags_id as tagId,
+        name_tags as nameTags,
+        verified as verified
+        FROM tags
+        WHERE verified = 1 and name_tags=#{nameTags}
+    </select>
+    <resultMap id="tagsResultMap" type="bo.ucb.edu.ingsoft.model.Tag">
+        <id column="tagId" property="tagId"></id>
+        <result column="nameTags" property="nameTags"></result>
+        <result column="verified" property="verified"></result>
+    </resultMap>
+    <select id="getVerifiedTags" resultMap="tagsResultMap">
+        SELECT
+               tags_id as tagId,
+               name_tags as nameTags,
+               verified as verified
+        FROM tags
+        WHERE
+            verified = 1
+    </select>
+    <select id="getUserTag" resultMap="tagsResultMap">
+        SELECT
+            a.tags_id as tagId,
+            a.name_tags as nameTags,
+            a.verified as verified
+        FROM tags a, user_tags b
+        WHERE
+            b.user_id=#{iduser} and a.tags_id=b.tags_id and a.verified = 1
+    </select>
+    <select id="listTagProject" resultMap="tagsResultMap">
+        SELECT
+            a.tags_id as tagId,
+            a.name_tags as nameTags,
+            a.verified as verified
+        FROM tags a, projects_tags b
+        WHERE
+            b.projects_id=#{idproject} and a.tags_id=b.tags_id and a.verified = 1
+    </select>
+</mapper>

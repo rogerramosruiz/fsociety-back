@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bo.ucb.edu.ingsoft.dao.CardDao">
+    <select id="dataCardId" resultType="bo.ucb.edu.ingsoft.model.Card">
+        SELECT
+            card_id as cardId,
+            user_id as userId,
+            card_name as cardName,
+            card_number as cardNumber,
+            expiration_year as expirationYear,
+            expiration_month as expirationMonth,
+            cvc as cvc,
+            creation_date as creationDate,
+            status as status
+        FROM card
+        WHERE
+            card_id = #{cardId} and status = 1
+    </select>
+    <resultMap id="cardResultMap" type="bo.ucb.edu.ingsoft.model.Card">
+        <id column="card_id" property="id"></id>
+        <result column="cardName" property="cardName"></result>
+        <result column="cardNumber" property="cardNumber"></result>
+        <result column="expirationYear" property="expirationYear"></result>
+        <result column="expirationMonth" property="expirationMonth"></result>
+        <result column="cvc" property="cvc"></result>
+        <result column="creationDate" property="creationDate"></result>
+        <result column="status" property="status"></result>
+    </resultMap>
+    <select id="getCard" resultMap="cardResultMap">
+        SELECT
+            card_id as cardId,
+            user_id as userId,
+            card_name as cardName,
+            card_number as cardNumber,
+            expiration_year as expirationYear,
+            expiration_month as expirationMonth
+        FROM card
+        WHERE
+            user_id = #{userId} and status = 1
+    </select>
+    <insert id="newCard" parameterType="bo.ucb.edu.ingsoft.model.Card">
+        INSERT INTO card VALUES (
+            null,
+            #{userId},
+            #{cardName},
+            #{cardNumber},
+            #{expirationYear},
+            #{expirationMonth},
+            #{cvc},
+            #{creationDate},
+            #{status},
+            #{transaction.txId},
+            #{transaction.txHost},
+            #{transaction.txUserId},
+            #{transaction.txDate}
+        )
+    </insert>
+
+    <update id="updateCard" parameterType="bo.ucb.edu.ingsoft.model.Card">
+        Update card
+        set
+            card_name=#{cardName},
+            card_Number=#{cardNumber},
+            expiration_year=#{expirationYear},
+            expiration_month=#{ expirationMonth},
+            CVC=#{cvc}
+        where
+            card_id = #{cardId} and status = 1
+    </update>
+
+<update id="deleteCard" parameterType="bo.ucb.edu.ingsoft.model.Card">
+        Update card
+        set
+            status=#{status}
+        where
+            card_id = #{cardId} and status = 1
+    </update>
+
+</mapper>

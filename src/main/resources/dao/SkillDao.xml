@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bo.ucb.edu.ingsoft.dao.SkillDao">
+    <resultMap id="skillsResultMap" type="bo.ucb.edu.ingsoft.model.Skill">
+        <id column="skill_id" property="id"></id>
+        <result column="skillName" property="skillName"></result>
+        <result column="verified" property="verified"></result>
+    </resultMap>
+    <select id="getSkills" resultMap="skillsResultMap">
+        SELECT
+               skill_id as skillId,
+               skill_name as skillName,
+               verified as verified
+        FROM skills
+        WHERE
+            verified = 1 and status = 1
+    </select>
+    <select id="getUserSkills" resultMap="skillsResultMap">
+        SELECT
+               sk.skill_id as skillId,
+               sk.skill_name as skillName,
+               sk.verified as verified
+        FROM skills sk
+        INNER JOIN user_skill usk ON
+        usk.skill_id=sk.skill_id
+        INNER JOIN user us ON
+        us.user_id=usk.user_id
+        WHERE
+            usk.user_id=#{userid} and sk.status = 1
+    </select>
+    <select id="getProjectSkills" resultMap="skillsResultMap">
+        SELECT
+               sk.skill_id as skillId,
+               sk.skill_name as skillName,
+               sk.verified as verified
+        FROM skills sk
+        INNER JOIN projects_skills psk ON
+        psk.skill_id=sk.skill_id
+        INNER JOIN projects pj ON
+        pj.projects_id=psk.projects_id
+        WHERE
+            psk.projects_id=#{projectid} and sk.status = 1
+    </select>
+    <select id="getBySkillName" resultType="bo.ucb.edu.ingsoft.model.Skill">
+        SELECT skillId as skillId,
+        skill_name as skillName,
+        verified as verified
+        FROM skills
+        WHERE verified = 1 and skill_name=#{skillName} and status = 1
+    </select>
+    <insert id="newSkill" parameterType="bo.ucb.edu.ingsoft.model.Skill">
+        INSERT INTO skills VALUES (
+            null,
+            #{skillName},
+            #{verified},
+            #{status},
+            #{transaction.txId},#{transaction.txHost},#{transaction.txUserId},
+            #{transaction.txDate}
+        )
+    </insert>
+    <update id="deleteskill" parameterType="bo.ucb.edu.ingsoft.model.Skill">
+        UPDATE skills
+        set
+            status=0
+        where
+            skill_id=#{skillId}
+    </update>
+    <update id="updateSkill" parameterType="bo.ucb.edu.ingsoft.model.Skill">
+        Update skills
+        set
+            skill_name=#{skillName}
+        where
+            skill_id = #{skillId}
+    </update>
+    <select id="getLastInsertId" resultType="java.lang.Integer">
+        SELECT skill_id FROM skills ORDER BY skill_id DESC LIMIT 1
+    </select>
+</mapper>

@@ -1,0 +1,70 @@
+
+POST http://localhost:8080/user/2/projects
+Accept: application/json
+Content-Type: application/json
+
+{
+  "projectTitle": "Reconocimiento Colores",
+  "description": "Reconocimiento de imagenes en python",
+  "benefits": "Experiencia en programacion en python",
+  "budget": 2548,
+  "status" : 1
+}
+###
+///
+PUT http://localhost:8080/user/1/projects/3
+Accept: application/json
+Content-Type: application/json
+
+{
+  "projectTitle": "Autos voladores",
+  "description": "es un poyecto muy nuevo",
+  "benefits": "mucho dinero ",
+  "budget": 2548,
+  "status" : 2
+}
+
+### GET all user owned projects
+GET http://localhost:8080/user/list/1
+Accept: application/json
+
+### GET all user owned projects
+GET http://localhost:8080/user/1/projects
+Accept: application/json
+###
+///project-feed/{userid}
+
+GET http://localhost:8080/user/1/project-feed
+Accept: application/json
+
+###
+PUT http://localhost:8080/user/1/project-feed/3
+Accept: application/json
+Content-Type: application/json
+
+{
+  "projectTitle": "Autos voladores",
+  "description": "es un poyecto muy nuevo",
+  "benefits": "mucho dinero ",
+  "budget": 2548,
+  "status" : 1
+}
+###
+///list/{userid}
+GET http://localhost:8080/my-projects/list/1
+Accept: application/json
+
+###
+
+///{projectid}/user-request
+GET http://localhost:8080/user/2/user-request
+Accept: application/json
+###
+///{projectid}/user-members
+
+GET http://localhost:8080/user/3/user-members
+Accept: application/json
+###
+///list/work_on/{userid}
+GET http://localhost:8080/my-projects/list/work_on/3
+Accept: application/json

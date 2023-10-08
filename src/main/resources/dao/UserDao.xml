@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bo.ucb.edu.ingsoft.dao.UserDao">
+    <insert id="newUser" parameterType="bo.ucb.edu.ingsoft.model.User">
+        INSERT INTO user
+        VALUES (
+            null,#{name},#{surname},#{username},
+            #{email},#{password},null,null,
+            null,1,#{transaction.txId},#{transaction.txHost},#{transaction.txUserId},
+            #{transaction.txDate}
+        )
+    </insert>
+
+    <select id="listproyectuser" resultType="bo.ucb.edu.ingsoft.model.User">
+        SELECT a.user_id as userId,
+        a.name as name,
+        a.surname as surname,
+        a.username as username,
+        a.email as email
+        FROM user a ,project_user b
+        where b.projects_id=#{projectsId} and b.user_id=a.user_id and b.rol=2 and a.status = 1
+
+    </select>
+
+    <select id="listproyectuserparticipan" resultType="bo.ucb.edu.ingsoft.model.User">
+        SELECT a.user_id as userId,
+        a.name as name,
+        a.surname as surname,
+        a.username as username,
+        a.email as email,
+        b.rol as status
+        FROM user a ,project_user b
+        where b.projects_id=#{projectsId}  and b.user_id=a.user_id  and b.rol!=2 and a.status = 1
+
+    </select>
+
+    <select id="findByUserId" resultType="bo.ucb.edu.ingsoft.model.User">
+        SELECT user_id as userId,
+        name as name,
+        surname as surname,
+        username as username,
+        email as email,
+        description as description,
+        image as image,
+        cellphone as cellphone
+        FROM user
+        where user_id=#{userId} and status = 1
+    </select>
+    <select id="findByUsername" resultType="bo.ucb.edu.ingsoft.model.User">
+        SELECT
+               username as username
+        FROM user
+        where username=#{username} and user_id!=#{userId} and status = 1
+    </select>
+    <select id="findPersonByNP" resultType="bo.ucb.edu.ingsoft.model.User">
+        SELECT
+            user_id as userId,
+            name as name,
+            surname as surname,
+            username as username,
+            email as email
+        FROM
+             user
+        WHERE
+            email=#{email} and password=#{password} and status = 1
+    </select>
+    <update id="updateUser" parameterType="bo.ucb.edu.ingsoft.model.User">
+            UPDATE user SET name=#{name},surname=#{surname},
+             username= #{username},email=#{email},
+             description=#{description}, cellphone=#{cellphone}
+             WHERE user_id= #{userId} and status = 1
+    </update>
+    <update id="updateImage" parameterType="bo.ucb.edu.ingsoft.model.User">
+            UPDATE user SET
+                image=#{image}
+            WHERE user_id= #{userId} and status = 1
+    </update>
+
+</mapper>

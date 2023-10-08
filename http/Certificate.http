@@ -1,0 +1,40 @@
+### GET request for all certificates of a user
+GET http://localhost:8080/user/1/certificates
+Accept: application/json
+
+### Add new certificate to a user
+POST http://localhost:8080/user/1/certificates
+Accept: application/json
+Content-Type: application/json
+
+{
+  "certificateName": "Curso de Java Avanzado",
+  "company": "Platzi",
+  "expeditionDate": "2021-01-01",
+  "credentialId": "4215sd7s3dadg7sadwgda4g",
+  "credentialURL": "http://platzi.com/certificados/c++",
+  "expirationDate": "2024-10-12"
+}
+
+### GET request for an specific certificates of a user
+GET http://localhost:8080/user/1/certificates/1
+Accept: application/json
+
+### Edit a certificate
+PUT http://localhost:8080/user/1/certificates/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "certificateName": "Curso de Python",
+  "company": "Udemy",
+  "expeditionDate": "2018-11-02",
+  "credentialId": "4564sdg7sadwer98g987",
+  "credentialURL" : "http://udemy.com/certificados/finanzas",
+  "expirationDate" : "2020-05-12"
+}
+
+### Soft-delete for an especific certificate
+DELETE http://localhost:8080/user/1/certificates/1
+Accept: application/json
+Content-Type: application/json

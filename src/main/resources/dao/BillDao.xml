@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bo.ucb.edu.ingsoft.dao.BillDao">
+    <select id="detailsByBillId" resultType="bo.ucb.edu.ingsoft.model.Bill">
+        SELECT
+            bill_id as billId,
+            user_id as userId,
+            payment_plan_id as paymentPlanId,
+            card_id as cardId,
+            projects_id as projectsId,
+            buy_date as buyDate,
+            billing_address as billingAddress,
+            country as country,
+            city as city
+        FROM bill
+        WHERE
+            bill_id = #{billId} and status = 1
+    </select>
+
+   <resultMap id="billsResultMap" type="bo.ucb.edu.ingsoft.dto.BillRequest">
+        <id column="bill_id" property="id"></id>
+        <result column="userId" property="userId"></result>
+        <result column="paymentPlanId" property="paymentPlanId"></result>
+        <result column="cardId" property="cardId"></result>
+        <result column="projectsId" property="projectsId"></result>
+        <result column="buyDate" property="buyDate"></result>
+        <result column="billingAddress" property="billingAddress"></result>
+        <result column="country" property="country"></result>
+        <result column="city" property="city"></result>
+        <result column="projectTitle" property="projectTitle"></result>
+        <result column="paymentPlanName" property="paymentPlanName"></result>
+        <result column="paymentPlanCost" property="paymentPlanCost"></result>
+    </resultMap>
+    <select id="getBills" resultMap="billsResultMap">
+        SELECT
+            a.bill_id as billId,
+            a.user_id as userId,
+            a.payment_plan_id as paymentPlanId,
+            a.card_id as cardId,
+            a.projects_id as projectsId,
+            a.buy_date as buyDate,
+            a.billing_address as billingAddress,
+            a.country as country,
+            a.city as city,
+            b.project_title as projectTitle,
+            c.plan as paymentPlanName,
+            c.cost as paymentPlanCost
+        FROM bill a, projects b, payment_plan c
+        WHERE
+            a.user_id = #{userId} and a.projects_id=b.projects_id and a.payment_plan_id=c.payment_plan_id and a.status = 1
+    </select>
+
+    <insert id="newBill" parameterType="bo.ucb.edu.ingsoft.model.Bill">
+        INSERT INTO bill VALUES (
+            null,
+            #{userId},
+            #{paymentPlanId},
+            #{cardId},
+            #{projectsId},
+            #{buyDate},
+            #{billingAddress},
+            #{country},
+            #{city},
+            #{status},
+            #{transaction.txId},
+            #{transaction.txHost},
+            #{transaction.txUserId},
+            #{transaction.txDate}
+        )
+    </insert>
+
+</mapper>

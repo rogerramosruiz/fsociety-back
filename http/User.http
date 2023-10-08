@@ -1,0 +1,49 @@
+### Create new user
+POST http://localhost:8080/users
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "sdaf",
+  "surname": "Savitar47",
+  "username": "ronmen",
+  "email": "jonas46@gmail.com",
+  "password": "12345678"
+}
+### image
+PUT http://localhost:8080/users/1/image
+Accept: application/json
+Content-Type: application/json
+
+{
+  "image": "B64encondeimageOrASimpleDirFile"
+}
+
+### Get user 1
+GET http://localhost:8080/users/3
+Accept: application/json
+
+### Update user 1
+PUT http://localhost:8080/users/3
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Juan",
+  "surname": "Fernandez",
+  "username": "ronmen24",
+  "email": "example@gmail.com",
+  "description": "Me gusta el sql",
+  "image": "B64encondeimageOrDirOfFile",
+  "cellphone": "75123456"
+}
+###
+
+POST http://localhost:8080/users/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "ronmen@gmail.com",
+  "password": "PasswordNeedsSecure"
+}
