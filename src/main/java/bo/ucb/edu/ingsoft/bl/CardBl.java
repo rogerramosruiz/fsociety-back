@@ -8,12 +8,15 @@ import bo.ucb.edu.ingsoft.model.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class CardBl {
@@ -39,6 +42,7 @@ public class CardBl {
     }
 
     public CardRequest createCard(Integer userId, CardRequest cardRequest, Transaction transaction) {
+        validationCard(cardRequest);
 
 
         Card card = new Card();
@@ -60,6 +64,7 @@ public class CardBl {
     }
 
     public CardRequest editCard(CardRequest cardRequest, Integer cardId, Integer userid, Transaction transaction) {
+        validationCard(cardRequest);
         Card card = new Card();
         card.setCardId(cardId);
         card.setCardName(cardRequest.getCardName());
@@ -88,26 +93,57 @@ public class CardBl {
     }
 
 
-    public Boolean isCardName(Integer userId, String cardName) {
-        Boolean resp=false;
-        List<Card> listCard = cardDao.getCard(userId);
-        for(Card card :listCard) {
-            if(card.getCardName().equals(cardName)) {
-                resp=true;
-            }
+    private void validationCard(CardRequest cardRequest) {
+        int min_length = 5;
+        int max_length = 20;
+        String regex_name = "[A-Za-zÁÉÍÓÚáéíóúñÑ ]{0,}";
+        Pattern pattern = Pattern.compile(regex_name);
+        Matcher matcher = pattern.matcher(cardRequest.getCardName());
+        if (!matcher.matches()) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "El nombre de la tarjeta no admite números ni caracteres especiales.");
         }
-        return resp;
-    }
-
-    public Boolean isCardNumber(Integer userId, Long cardNumber) {
-        Boolean resp=false;
-        List<Card> listCard = cardDao.getCard(userId);
-        for(Card card :listCard) {
-            if(card.getCardNumber().toString().equals(cardNumber.toString())) {
-                resp=true;
-            }
+        if (cardRequest.getCardName().trim().length() < min_length) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, String.format("El nombre de la tarjeta debe ser mayor a %d caracteres.", min_length));
         }
-        return resp;
-    }
+        if (cardRequest.getCardName().trim().length() > max_length) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, String.format("El nombre de la tarjeta debe ser menor a %d caracteres.", max_length));
+        }
 
+        int digitos = (int) (Math.log10(cardRequest.getCardNumber()) + 1);
+        if (cardRequest.getCardNumber() < 0 || digitos < 14 || digitos > 16) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Número de tarjeta incorrecto.");
+        }
+
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        if (cardRequest.getExpirationYear() < year) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, String.format("El año de expiración no debe ser menor a la fecha actual.", max_length));
+        }
+
+        if (cardRequest.getExpirationMonth() < 1 || cardRequest.getExpirationMonth() > 12) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Mes de expiración incorrecto.");
+        }
+        int month = cal.get(Calendar.MONTH);
+        if (cardRequest.getExpirationYear() == year && cardRequest.getExpirationMonth() <= month) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, String.format("El mes de expiración no debe ser menor de la fecha actual %d.", month));
+        }
+
+        digitos = (int) (Math.log10(cardRequest.getCvc()) + 1);
+        if (digitos < 3 || digitos > 4) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "CVC incorrecto.");
+        }
+
+        if (cardRequest.getCreationDate().before(new Date())) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Fecha de creación incorrecta.");
+        }
+    }
 }

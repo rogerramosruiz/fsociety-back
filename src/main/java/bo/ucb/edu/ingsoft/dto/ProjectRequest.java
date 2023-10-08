@@ -12,16 +12,14 @@ public class ProjectRequest {
     private String description;
     @NotBlank(message = "beneficios no pueden estar en blanco ")
     private String benefits;
-    private Double budget;
     private Integer status;
 
     @Override
     public String toString() {
-        return "ProjectRequest{" +
+        return "ProyectRequest{" +
                 "projectTitle='" + projectTitle + '\'' +
                 ", description='" + description + '\'' +
                 ", benefits='" + benefits + '\'' +
-                ", budget=" + budget +
                 ", status=" + status +
                 '}';
     }
@@ -48,14 +46,6 @@ public class ProjectRequest {
 
     public void setBenefits(String benefits) {
         this.benefits = benefits;
-    }
-
-    public Double getBudget() {
-        return budget;
-    }
-
-    public void setBudget(Double budget) {
-        this.budget = budget;
     }
 
     public Integer getStatus() {
